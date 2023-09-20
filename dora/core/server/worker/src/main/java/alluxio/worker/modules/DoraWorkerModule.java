@@ -12,6 +12,7 @@
 package alluxio.worker.modules;
 
 import alluxio.ClientContext;
+import alluxio.client.file.FileSystemContext;
 import alluxio.client.file.cache.CacheManager;
 import alluxio.client.file.cache.CacheManagerOptions;
 import alluxio.client.file.cache.PageMetaStore;
@@ -22,6 +23,7 @@ import alluxio.master.MasterClientContext;
 import alluxio.membership.MembershipManager;
 import alluxio.underfs.UfsManager;
 import alluxio.worker.Worker;
+import alluxio.worker.dora.DoraMetaManager;
 import alluxio.worker.dora.DoraUfsManager;
 import alluxio.worker.dora.DoraWorker;
 import alluxio.worker.dora.PagedDoraWorker;
@@ -51,6 +53,9 @@ public class DoraWorkerModule extends AbstractModule {
         MasterClientContext.newBuilder(ClientContext.create(Configuration.global())).build()));
     bind(UfsManager.class).to(DoraUfsManager.class).in(Scopes.SINGLETON);
     bind(AlluxioConfiguration.class).toProvider(() -> Configuration.global());
+
+    FileSystemContext fileSystemContext = FileSystemContext.create();
+    bind(FileSystemContext.class).toInstance(fileSystemContext);
 
     // Note that dora can only use Paged Store
     try {

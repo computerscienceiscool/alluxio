@@ -233,7 +233,9 @@ public class DoraWorkerClientServiceHandler extends BlockWorkerGrpc.BlockWorkerI
         String ufsFullPath = PathUtils.concatPath(request.getPath(), status.getName());
 
         alluxio.grpc.FileInfo fi =
-            ((PagedDoraWorker) mWorker).buildFileInfoFromUfsStatus(status, ufsFullPath);
+            PagedDoraWorker.buildFileInfoFromUfsStatus(((PagedDoraWorker) mWorker).getCacheUsage(),
+                    ((PagedDoraWorker) mWorker).getUfsInstance(ufsFullPath).getUnderFSType(),
+                    status, ufsFullPath);
 
         builder.addFileInfos(fi);
         if (builder.getFileInfosCount() == LIST_STATUS_BATCH_SIZE) {
